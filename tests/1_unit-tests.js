@@ -155,7 +155,6 @@ suite('Unit Tests', () => {
 
         });
 
-    suite('Highlight translations', function() {
         test('Highlight translation in (Mangoes are my favorite fruit.)', function(done) {
             const text = 'Mangoes are my favorite fruit.';
             const translation = 'Mangoes are my <span class="highlight">favourite</span> fruit.';
@@ -183,6 +182,5 @@ suite('Unit Tests', () => {
             done();
 
         });
-    });
     });
 });
