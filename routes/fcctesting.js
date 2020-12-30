@@ -99,5 +99,6 @@ function testFilter(tests, type, n) {
   if(n !== undefined) {
     return out[n] || out;
   }
+  console.log(out);
   return out;
 }
