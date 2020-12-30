@@ -103,6 +103,7 @@ class Translator {
     }
 
     isTime(text, locale) {
+        if(text.split(' ').length > 1) return false;
         if (locale === 'american-to-british') {
             const regex = /\d{1,2}:\d{1,2}/;
             return regex.test(text);
