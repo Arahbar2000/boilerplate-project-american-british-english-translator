@@ -24,21 +24,24 @@ class Translator {
             let j = i + 1;
             let currJoinedWords = [textArray[i]];
             let translatable = false;
+            let latestJoinedWord;
+            let k;
             while(j < i + 4 && j < textArray.length) {
-                const newWord = this.processWord(textArray[j], locale);
-                if (newWord) break;
-                punctuation = textArray[j].match(/[.!?]$/g);
                 currJoinedWords.push(textArray[j]);
                 let joinedWords = this.processWord(currJoinedWords.join(' '), locale);
                 if (joinedWords) {
-                    if (i === 0) joinedWords = joinedWords.charAt(0).toUpperCase() + joinedWords.slice(1);
-                    translatable = true;
-                    if (punctuation) translation.push((highlight ? this.wrap(joinedWords) : joinedWords) + punctuation[0]);
-                    else translation.push(highlight ? this.wrap(joinedWords) : joinedWords);
-                    i = j;
-                    break;
+                    latestJoinedWord = joinedWords;
+                    k = j;
                 }
                 j++;
+            }
+            if (latestJoinedWord) {
+                const punctuation = textArray[k].match(/[.,!?]$/g);
+                if (i === 0) latestJoinedWord = latestJoinedWord.charAt(0).toUpperCase() + latestJoinedWord.slice(1);
+                translatable = true;
+                if (punctuation) translation.push((highlight ? this.wrap(latestJoinedWord) : latestJoinedWord) + punctuation[0]);
+                else translation.push(highlight ? this.wrap(latestJoinedWord) : latestJoinedWord);
+                i = k;
             }
             if (!translatable) translation.push(currWord);
         }
@@ -55,13 +58,13 @@ class Translator {
                 let translatedWord = americanToBritishTitles[modifiedWord];
                 return translatedWord.charAt(0).toUpperCase() + translatedWord.slice(1);
             }
+            modifiedWord = modifiedWord.replace(/[.,!?]$/g, '');
             if (this.isTime(modifiedWord, locale)) {
                 let charArray = [...modifiedWord];
                 let index = modifiedWord.indexOf(':');
                 charArray[index] = '.';
                 return charArray.join('');
             }
-            modifiedWord = modifiedWord.replace(/[.,!?]$/g, '');
             if (modifiedWord in americanOnly) {
                 return americanOnly[modifiedWord];
             }
@@ -75,13 +78,13 @@ class Translator {
                 let translatedWord = britishToAmericanTitles[modifiedWord];
                 return translatedWord.charAt(0).toUpperCase() + translatedWord.slice(1);
             }
+            modifiedWord = modifiedWord.replace(/[.,!?]$/g, '');
             if (this.isTime(modifiedWord, locale)) {
                 let charArray = [...modifiedWord];
                 let index = modifiedWord.indexOf('.');
                 charArray[index] = ':';
                 return charArray.join('');
             }
-            modifiedWord = modifiedWord.replace(/[.,!?]$/g, '');
             if (modifiedWord in britishOnly) {
                 return britishOnly[modifiedWord];
             }
